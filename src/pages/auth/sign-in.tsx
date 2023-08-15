@@ -6,6 +6,7 @@ import { TextField } from "~/components/common/forms/TextField"
 import { PageContainer } from "~/components/common/layouts/PageContainer"
 import { SignInSchema, signInSchema } from "~/utils/validations/auth"
 import { zodResolver } from "@hookform/resolvers/zod"
+import Image from "next/image"
 
 export default function SignIn() {
     const formMethods = useForm<SignInSchema>({
@@ -70,8 +71,14 @@ export default function SignIn() {
                     </div>
                 </section>
 
-                <div className="bg-black hidden lg:block">
-
+                <div className="hidden lg:block">
+                    <figure className="h-full w-full relative">
+                        <Image
+                            src="/images/building-front-page.jpg"
+                            alt="Building"
+                            fill
+                        />
+                    </figure>
                 </div>
             </section>
         </PageContainer>
