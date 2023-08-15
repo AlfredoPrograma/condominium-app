@@ -1,20 +1,28 @@
 import { signIn } from "next-auth/react"
-import { ChangeEvent, FormEvent, useState } from "react"
+import { FormEvent } from "react"
+import { FormProvider, useForm } from "react-hook-form"
+import { z } from "zod"
+import { TextField } from "~/components/common/forms/TextField"
 import { PageContainer } from "~/components/common/layouts/PageContainer"
+import { SignInSchema, signInSchema } from "~/utils/validations/auth"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export default function SignIn() {
-    const [signInForm, setSignInForm] = useState({
-        email: "",
-        password: ""
+    const formMethods = useForm<SignInSchema>({
+        resolver: zodResolver(signInSchema),
+        defaultValues: {
+            email: '',
+            password: ''
+        }
     })
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    const handleSignIn = async (data: SignInSchema) => {
         try {
-            e.preventDefault()
             const res = await signIn("credentials", {
+                redirect: false,
                 callbackUrl: "/",
-                email: signInForm.email,
-                password: signInForm.password
+                email: data.email,
+                password: data.password
             })
 
             console.log(res)
@@ -23,15 +31,9 @@ export default function SignIn() {
         }
     }
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target
-
-        setSignInForm({ ...signInForm, [name]: value })
-    }
-
     return (
         <PageContainer title="Sign in">
-            <section className="min-h-screen grid md:grid-cols-[1fr_2fr]">
+            <section className="min-h-screen grid lg:grid-cols-[1fr_2fr]">
                 <section className="grid place-items-center">
                     <div className="flex flex-col items-center gap-6">
                         <header className="flex flex-col gap-2 text-center">
@@ -43,27 +45,32 @@ export default function SignIn() {
 
                             <h2>Gestiona tus responsabilidades residenciales</h2>
                         </header>
-                        <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-4 max-w-xs">
-                            <div className="form-control w-full max-w-xs">
-                                <label htmlFor="email" className="label">
-                                    <span className="label-text font-semibold">Correo electrónico</span>
-                                </label>
-                                <input onChange={handleChange} value={signInForm.email} type="text" name="email" id="email" className="input input-bordered w-full max-w-xs" placeholder="usuario@mail.com" />
-                            </div>
 
-                            <div className="form-control w-full max-w xs">
-                                <label htmlFor="password" className="label">
-                                    <span className="label-text font-semibold">Contraseña</span>
-                                </label>
-                                <input onChange={handleChange} value={signInForm.password} type="password" name="password" id="password" className="input input-bordered w-full max-w-xs" placeholder="******" />
-                            </div>
+                        <FormProvider {...formMethods}>
+                            <form onSubmit={formMethods.handleSubmit(handleSignIn)} className="flex flex-col gap-4 max-w-xs">
+                                <TextField
+                                    label="Correo electrónico"
+                                    name="email"
+                                    id="email"
+                                    placeholder="usuario@mail.com"
+                                    type="text"
+                                />
 
-                            <button type="submit" className="btn-primary rounded-md py-2">Iniciar sesión</button>
-                        </form>
+                                <TextField
+                                    label="Contraseña"
+                                    name="password"
+                                    id="password"
+                                    placeholder="*******"
+                                    type="password"
+                                />
+
+                                <button type="submit" className="btn-primary rounded-md py-2">Iniciar sesión</button>
+                            </form>
+                        </FormProvider>
                     </div>
                 </section>
 
-                <div className="bg-black hidden md:block">
+                <div className="bg-black hidden lg:block">
 
                 </div>
             </section>

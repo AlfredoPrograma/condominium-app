@@ -7,7 +7,7 @@ import {
 } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "~/server/db";
-import { loginSchema } from "~/utils/validations/auth";
+import { signInSchema } from "~/utils/validations/auth";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -54,7 +54,7 @@ export const authOptions: NextAuthOptions = {
       },
 
       async authorize(credentials) {
-        const creds = await loginSchema.parseAsync(credentials)
+        const creds = await signInSchema.parseAsync(credentials)
 
         const user = await prisma.user.findFirst({
           where: { email: creds.email }
