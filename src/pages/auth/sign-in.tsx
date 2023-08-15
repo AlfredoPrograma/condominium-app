@@ -1,7 +1,6 @@
 import { signIn } from "next-auth/react"
-import Head from "next/head"
 import { ChangeEvent, FormEvent, useState } from "react"
-import { PageContainer } from "~/components/common/PageContainer"
+import { PageContainer } from "~/components/common/layouts/PageContainer"
 
 export default function SignIn() {
     const [signInForm, setSignInForm] = useState({
