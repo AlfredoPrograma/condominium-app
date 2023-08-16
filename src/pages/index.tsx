@@ -1,4 +1,3 @@
-import { useSession, signOut } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import { routes } from "~/constants/routes"
@@ -6,17 +5,13 @@ import { api } from "~/utils/api";
 
 export default function Home() {
   const { data, isLoading, refetch } = api.auth.testSignedIn.useQuery(undefined, { enabled: false })
-  const session = useSession()
 
-  console.log({data, isLoading})
+  console.log({ data, isLoading })
 
   const handleFetchProtected = async () => {
     await refetch()
   }
 
-  const handleSignOut = async () => {
-    await signOut({ redirect: false })
-  }
 
   return (
     <>
@@ -30,7 +25,6 @@ export default function Home() {
         <Link href={routes.auth.signUp}>Sign up</Link>
 
         <button type="button" className="btn-primary" onClick={handleFetchProtected}>Click if u are auth</button>
-        <button type="button" className="btn-error p-2" onClick={handleSignOut}>Sign out</button>
       </main>
     </>
   );
