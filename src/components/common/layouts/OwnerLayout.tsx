@@ -1,14 +1,19 @@
 import Link from "next/link"
 import { PageContainer } from "./PageContainer"
 import { signOut } from "next-auth/react"
+import { useRouter } from "next/router"
+import { routes } from "~/constants/routes"
 
 interface OwnerLayoutProps {
     children: JSX.Element | JSX.Element[]
 }
 
 export function OwnerLayout({ children }: OwnerLayoutProps) {
+    const router = useRouter()
+
     const handleSignOut = async () => {
         await signOut({ redirect: false })
+        router.replace(routes.auth.signIn)
     }
 
     return (
