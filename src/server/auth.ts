@@ -7,7 +7,10 @@ import {
 } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "~/server/db";
+import { validatePassword } from "~/utils/encrypt/hashPassword";
 import { signInSchema } from "~/utils/validations/auth";
+
+type UserRole = "OWNER" | "ADMIN"
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -16,18 +19,23 @@ import { signInSchema } from "~/utils/validations/auth";
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
 declare module "next-auth" {
+
   interface Session extends DefaultSession {
     user: DefaultSession["user"] & {
       id: string;
-      // ...other properties
-      // role: UserRole;
+      role: UserRole;
     };
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User {
+    role?: UserRole;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    role?: UserRole
+  } 
 }
 
 /**
@@ -54,23 +62,46 @@ export const authOptions: NextAuthOptions = {
       },
 
       async authorize(credentials) {
-        const creds = await signInSchema.parseAsync(credentials)
+        const { email, password } = await signInSchema.parseAsync(credentials)
 
         const user = await prisma.user.findFirst({
-          where: { email: creds.email }
+          where: { email }
         })
 
-        if (!user || credentials?.password !== "admin") {
+        if (!user) {
+          return null
+        }
+
+        if (await validatePassword(password, user.password)) {
           return null
         }
 
         return {
           id: user.id,
-          email: user.email
+          email: user.email,
+          role: user.role
         }
       },
     }),
   ],
+
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user?.role) {
+        token.role = user.role
+      }
+
+      return token
+    },
+
+    async session({ session, token }) {
+      if (token?.role) {
+        session.user.role = token.role
+      }
+
+      return session
+    }
+  }
 
 };
 
