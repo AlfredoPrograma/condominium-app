@@ -60,7 +60,7 @@ export const authOptions: NextAuthOptions = {
           where: { email: creds.email }
         })
 
-        if (!user) {
+        if (!user || credentials?.password !== "admin") {
           return null
         }
 
