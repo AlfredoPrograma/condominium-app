@@ -2,7 +2,7 @@ import { GetServerSideProps } from "next"
 import { useRouter } from "next/router"
 import Image from "next/image"
 import Link from "next/link"
-import { getSession, signIn } from "next-auth/react"
+import { getSession, signIn, useSession } from "next-auth/react"
 
 import { FormProvider, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -11,16 +11,19 @@ import { toast } from "react-toastify"
 import { TextField } from "~/components/common/forms/TextField"
 import { PageContainer } from "~/components/common/layouts/PageContainer"
 import { SignInSchema, signInSchema } from "~/utils/validations/auth"
-import { routes } from "~/constants/routes"
+import { getDashboardRouteByRole } from "~/constants/routes"
 import { ErrorCodes, errors } from "~/constants/errors"
+import { useEffect } from "react"
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const session = await getSession(ctx)
 
     if (session) {
+        const destination = getDashboardRouteByRole(session.user.role)
+
         return {
             redirect: {
-                destination: routes.owner.home,
+                destination,
                 permanent: false
             }
         }
@@ -33,7 +36,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
 
 export default function SignIn() {
+    const session = useSession()
     const router = useRouter()
+
     const formMethods = useForm<SignInSchema>({
         resolver: zodResolver(signInSchema),
         defaultValues: {
@@ -56,13 +61,18 @@ export default function SignIn() {
                 toast(errors[mappedError as ErrorCodes], { position: "top-center", type: "error" })
                 return
             }
-
-            router.replace(routes.owner.home)
-
         } catch (err) {
             console.log(err)
         }
     }
+
+    useEffect(() => {
+        if (session.status === "authenticated" && session.data) {
+            const destination = getDashboardRouteByRole(session.data.user.role)
+
+            router.replace(destination)
+        }
+    }, [session])
 
     return (
         <PageContainer title="Inicia sesión">

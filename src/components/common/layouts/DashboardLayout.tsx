@@ -4,11 +4,11 @@ import { signOut } from "next-auth/react"
 import { useRouter } from "next/router"
 import { routes } from "~/constants/routes"
 
-interface OwnerLayoutProps {
+interface DashboardLayoutProps {
     children: JSX.Element | JSX.Element[]
 }
 
-export function OwnerLayout({ children }: OwnerLayoutProps) {
+export function DashboardLayout({ children }: DashboardLayoutProps) {
     const router = useRouter()
 
     const handleSignOut = async () => {
