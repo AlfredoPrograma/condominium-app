@@ -12,10 +12,24 @@ type SessionCallback<T> = ({ session }: { session: Session }) => GetServerSidePr
 export async function verifySession<T>(ctx: GetServerSidePropsContext, callback: SessionCallback<T>) {
     const session = await getSession(ctx)
 
+    // Redirect to login when does not exist active session
     if (!session) {
         return {
             redirect: {
                 destination: routes.auth.signIn,
+                permanent: false
+            }
+        }
+    }
+
+    // Handle redirecting to allowed dashboard based on role and given url
+    const targetUrl = ctx.resolvedUrl
+    const roleUrl =  getDashboardRouteByRole(session.user.role)
+
+    if (targetUrl !== roleUrl) {
+        return {
+            redirect: {
+                destination: roleUrl,
                 permanent: false
             }
         }

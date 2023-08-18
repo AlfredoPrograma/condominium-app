@@ -13,11 +13,12 @@ export const routes = {
     }
 }
 
-export function getDashboardRouteByRole(role: Role) {
-    const dashboards: Record<Role, string> = {
-        ADMIN: routes.admin.dashboard,
-        OWNER: routes.owner.dashboard
-    }
+export const dashboardsByRole: Record<Role, string> = {
+    ADMIN: routes.admin.dashboard,
+    OWNER: routes.owner.dashboard
+}
 
-    return dashboards[role]
+
+export function getDashboardRouteByRole(role: Role) {
+    return dashboardsByRole[role]
 }
