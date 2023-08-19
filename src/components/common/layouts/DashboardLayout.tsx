@@ -1,8 +1,10 @@
-import Link from "next/link"
-import { PageContainer } from "./PageContainer"
 import { signOut } from "next-auth/react"
 import { useRouter } from "next/router"
+import { MdNotificationsNone as NotificationsIcon, MdOutlineSearch as SearchIcon } from 'react-icons/md'
+
 import { routes } from "~/constants/routes"
+
+import { PageContainer } from "./PageContainer"
 
 interface DashboardLayoutProps {
     children: JSX.Element | JSX.Element[]
@@ -18,29 +20,47 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
     return (
         <PageContainer title="Inicio: Propietario">
-            <div className="flex flex-col min-h-screen">
-                <header className="flex-grow-0">
-                    <div className="navbar bg-base-100 shadow-md px-6 flex justify-between">
-                        <div>
-                            <Link href="#" className="font-bold text-xl">Condominium</Link>
-                        </div>
+            <div className="grid grid-cols-[300px_1fr] min-h-screen bg-slate-100">
+                <aside className="bg-white">
 
-                        <div>
-                            <button onClick={handleSignOut} className="btn-error px-4 py-2 rounded-md">Cerrar sesión</button>
+                </aside>
+
+                <div>
+                    <header>
+                        <div className="navbar py-6 px-8 flex justify-between items-end bg-slate-100">
+                            <div className="flex-grow-0 text-3xl font-semibold">Hola, Alfredo Arvelaez</div>
+
+                            <div className="flex-grow-1">
+                                <div className="flex gap-4">
+                                    <button className="w-12 btn btn-circle bg-white">
+                                        <SearchIcon size={20} />
+                                    </button>
+
+                                    <button className="w-12 btn btn-circle bg-white">
+                                        <NotificationsIcon size={20} />
+                                    </button>
+                                </div>
+
+                                <div className="divider divider-horizontal" />
+
+                                <button className="btn btn-circle bg-white w-12 text-lg" onClick={handleSignOut}>
+                                    {/* TODO: should show user avatar's icon */}
+                                    AA
+                                </button>
+                            </div>
+
                         </div>
+                    </header>
+
+                    {/* DASHBOARD */}
+                    <div className="flex-grow p-6">
+                        {children}
                     </div>
-                </header>
 
-                {/* DASHBOARD */}
-                <div className="flex-grow p-6">
-                    {children}
                 </div>
 
-                <footer className="footer footer-center p-4 bg-base-200 text-base-content flex-grow-0">
-                    <div>
-                        <p>Todos los derechos reservados © {2023} - Alfredo Arvelaez</p>
-                    </div>
-                </footer>
+
+
 
             </div>
         </PageContainer>
