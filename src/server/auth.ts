@@ -20,9 +20,10 @@ type UserRole = "OWNER" | "ADMIN"
  */
 declare module "next-auth" {
 
-  interface Session extends DefaultSession {
-    user: DefaultSession["user"] & {
-      id: string;
+  interface Session {
+    user: {
+      userId: string;
+      email: string
       role: UserRole;
     };
   }
@@ -51,7 +52,6 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: '/auth/sign-in',
-    newUser: '/sign-up'
   },
   providers: [
     CredentialsProvider({
@@ -77,7 +77,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         return {
-          id: user.id,
+          id: user.userId,
           email: user.email,
           role: user.role
         }

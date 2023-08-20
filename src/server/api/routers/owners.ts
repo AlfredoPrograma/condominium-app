@@ -12,7 +12,7 @@ export const ownersRouter = createTRPCRouter({
             const owners = await ctx.prisma.user.findMany({ where: {
                 role: 'OWNER'
             }, select: {
-                id: true,
+                userId: true,
                 email: true
             }})
 
@@ -42,7 +42,10 @@ export const ownersRouter = createTRPCRouter({
             const hashedPassword = await hashPassword(password)
 
             await ctx.prisma.user.create({
-                data: { email, password: hashedPassword, role: 'OWNER' }
+                data: { 
+                    email, 
+                    password: hashedPassword, 
+                    role: 'OWNER' }
             })
 
             return {
