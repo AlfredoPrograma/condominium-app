@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { GetServerSideProps, GetServerSidePropsResult, InferGetServerSidePropsType } from "next";
+import * as jwt from 'jsonwebtoken'
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -7,6 +8,7 @@ import { z } from "zod";
 import { TextField } from "~/components/common/forms/TextField";
 import { PageContainer } from "~/components/common/layouts";
 import { routes } from "~/constants/routes";
+import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
 import { api } from "~/utils/api";
 import { ErrorMessages } from "~/utils/errors/errorMessages";
@@ -92,25 +94,29 @@ export const getServerSideProps: GetServerSideProps<ChangePasswordProps> = async
         }
     }
 
-    const queryParams = ctx.query
+    try {
+        const queryParams = ctx.query
 
-    if (!queryParams.userId) {
-        return redirectToSignIn
-    }
-
-    const targetUser = await prisma.user.findUnique({ where: { userId: queryParams.userId as string } })
-
-    if (!targetUser) {
-        return redirectToSignIn
-    }
-
-    if (targetUser?.password) {
-        return redirectToSignIn
-    }
-
-    return {
-        props: {
-            userId: targetUser?.userId
+        if (!queryParams.token) {
+            return redirectToSignIn
         }
+
+        const { userId } = jwt.verify(queryParams.token as string, env.NEXTAUTH_SECRET!) as { userId: string }
+
+        const targetUser = await prisma.user.findUnique({ where: { userId } })
+
+        // TODO: redirect to internal server error or not found error
+        if (!targetUser || targetUser.emailVerified) {
+            return redirectToSignIn
+        }
+
+        return {
+            props: {
+                userId: targetUser?.userId
+            }
+        }
+    } catch (err) {
+        // TODO: redirect to expired or invalid token page
+        return redirectToSignIn
     }
 }

@@ -1,6 +1,8 @@
 import * as trpc from '@trpc/server'
+import * as jwt from 'jsonwebtoken'
 import { z } from 'zod'
 import { registerOwnerSchema } from '~/components/admin/forms/RegisterOwnerForm'
+import { env } from '~/env.mjs'
 import { changePasswordSchema } from '~/pages/auth/change-password'
 import {
     createTRPCRouter,
@@ -54,10 +56,12 @@ export const ownersRouter = createTRPCRouter({
                 }
             })
 
+            const token = await jwt.sign({ userId: newOwner.userId }, env.NEXTAUTH_SECRET!)
+
             await sendMail({
                 subject: 'Culmina tu registro',
                 to: newOwner.email,
-                text: `http://localhost:3000/auth/change-password?userId=${newOwner.userId}`
+                text: `http://localhost:3000/auth/change-password?token=${token}`
             })
 
             return {
