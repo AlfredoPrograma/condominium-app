@@ -21,7 +21,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 <div>
                     <Navbar />
                     {/* DASHBOARD */}
-                    <div className="flex-grow p-6">
+                    <div className="p-6">
                         {children}
                     </div>
                 </div>
