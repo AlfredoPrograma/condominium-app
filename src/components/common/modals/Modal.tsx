@@ -1,20 +1,31 @@
+import { MdClose as CloseIcon } from 'react-icons/md'
+
 export interface ModalProps {
     id: string,
+    title?: string,
+    content?: string
+    children?: JSX.Element | JSX.Element[]
 }
 
-export function Modal({ id }: ModalProps) {
+export function Modal({ id, title, content, children }: ModalProps) {
     return (
         <>
             <input type="checkbox" id={id} className="modal-toggle" />
             <div className="modal">
                 <div className="modal-box">
-                    <h3 className="font-bold text-lg">Hello!</h3>
-                    <p className="py-4">This modal works with a hidden checkbox!</p>
+                    <header className='flex justify-between items-center'>
+                        <h3 className="font-bold text-lg">{title}</h3>
 
-                    <div className="modal-action">
-                        <label htmlFor={id} className="btn">Close!</label>
-                    </div>
+                        <label htmlFor={id} className='btn btn-circle btn-ghost'>
+                            <CloseIcon size={24} />
+                        </label>
+                    </header>
+
+                    {children}
+                    {content && !children && <p>{content}</p>}
                 </div>
+
+                <label className="modal-backdrop" htmlFor={id} />
             </div>
         </>
     )

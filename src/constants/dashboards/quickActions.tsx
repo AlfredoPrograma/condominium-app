@@ -9,7 +9,7 @@ export const ADMIN_QUICK_ACTIONS: QuickActionProps[] = [
         title: 'Registrar nuevo residente',
         description: 'Agrega un nuevo residente a la base de datos del condominio.',
         icon: <AddOwnerIcon size={48} />,
-        modal: <Modal id='NEW_OWNER' />,
+        modal: <Modal id='NEW_OWNER' title='Registrar nuevo residente' />,
         color: 'bg-emerald-600'
     },
     {
