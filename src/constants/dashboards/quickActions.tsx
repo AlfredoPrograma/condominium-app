@@ -1,4 +1,5 @@
 import { MdGroupAdd as AddOwnerIcon, MdAttachMoney as MoneyIcon, MdCalendarMonth as CalendarIcon } from 'react-icons/md'
+import { RegisterOwnerForm } from '~/components/admin/forms/RegisterOwnerForm';
 import { Modal } from '~/components/common/modals/Modal';
 
 import { QuickActionProps } from "~/components/common/navigation/QuickAction";
@@ -9,7 +10,10 @@ export const ADMIN_QUICK_ACTIONS: QuickActionProps[] = [
         title: 'Registrar nuevo residente',
         description: 'Agrega un nuevo residente a la base de datos del condominio.',
         icon: <AddOwnerIcon size={48} />,
-        modal: <Modal id='NEW_OWNER' title='Registrar nuevo residente' />,
+        modal:
+            <Modal id='NEW_OWNER' title='Registrar nuevo residente'>
+                <RegisterOwnerForm />
+            </Modal>,
         color: 'bg-emerald-600'
     },
     {
