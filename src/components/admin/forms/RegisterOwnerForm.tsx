@@ -14,8 +14,11 @@ export const registerOwnerSchema = z.object({
 export type RegisterOwnerSchema = z.infer<typeof registerOwnerSchema>
 
 export function RegisterOwnerForm() {
+    const trpcUtils = api.useContext()
+
     const { mutate: mutateRegisterOwner } = api.owners.create.useMutation({
         onSuccess: () => {
+            trpcUtils.invalidate(undefined, { queryKey: ['owners.getAll'] })
             toast("Propietario creado exitosamente", { type: 'success' })
         },
         onError: () => {

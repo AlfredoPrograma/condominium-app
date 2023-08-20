@@ -15,7 +15,6 @@ interface AdminLayoutProps extends WithUser {
 export default function AdminLayout({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
     const { data } = api.owners.getAll.useQuery()
 
-
     return (
         <DashboardLayout>
             <div className="grid grid-cols-6 gap-8">
@@ -44,6 +43,7 @@ export default function AdminLayout({ user }: InferGetServerSidePropsType<typeof
 }
 
 export const getServerSideProps: GetServerSideProps<AdminLayoutProps> = async (ctx) => {
+
     return await verifySession(ctx, ({ session }) => {
         return {
             props: {
