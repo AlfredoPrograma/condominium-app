@@ -1,7 +1,7 @@
 import { User } from "@prisma/client";
 import DataTable, { TableColumn } from 'react-data-table-component'
 
-type Owner = Pick<User, 'email' | 'id'>
+type Owner = Pick<User, 'email' | 'userId'>
 
 interface OwnersTableProps {
     owners: Owner[]
@@ -11,7 +11,7 @@ export function OwnersTable({ owners }: OwnersTableProps) {
     const columns: TableColumn<Owner>[] = [
         {
             name: 'ID',
-            selector: row => row.id,
+            selector: row => row.userId,
         },
         {
             name: 'Correo electrónico',

@@ -26,7 +26,7 @@ export const ownersRouter = createTRPCRouter({
     create: protectedProcedure
         .input(registerOwnerSchema)
         .mutation(async ({ input, ctx }) => {
-            const { email, password } = input
+            const { email, password, age, firstName, identifierCode, lastName, phoneNumber } = input
 
             const exists = await ctx.prisma.user.findFirst({
                 where: { email }
@@ -42,10 +42,15 @@ export const ownersRouter = createTRPCRouter({
             const hashedPassword = await hashPassword(password)
 
             await ctx.prisma.user.create({
-                data: { 
+                data: {
+                    firstName,
+                    lastName,
+                    age: Number(age),
+                    identifierCode,
+                    phoneNumber,
                     email, 
                     password: hashedPassword, 
-                    role: 'OWNER' }
+                }
             })
 
             return {

@@ -6,12 +6,21 @@ import { z } from "zod"
 import { TextField } from "~/components/common/forms/TextField"
 import { Modal, ModalProps } from "~/components/common/modals/Modal"
 import { api } from "~/utils/api"
+import { ErrorMessages } from "~/utils/errors/errorMessages"
 
 export const registerOwnerSchema = z.object({
-    email: z.string().email({ message: "Correo electrónico inválido " }),
+    firstName: z.string().nonempty({ message: ErrorMessages.FIELD_REQUIRED }),
+    lastName: z.string().nonempty({ message: ErrorMessages.FIELD_REQUIRED }),
+    age: z.string().nonempty({ message: ErrorMessages.FIELD_REQUIRED }),
+    // TODO: identifier code should have a pattern
+    identifierCode: z.string().nonempty({ message: ErrorMessages.FIELD_REQUIRED }),
+    // TODO: identifier code should have a pattern
+    phoneNumber: z.string().nonempty({ message: ErrorMessages.FIELD_REQUIRED }),
+    email: z.string().email({ message: ErrorMessages.INVALID_EMAIL }),
     password: z.string()
-        .min(4, { message: "La contraseña debe tener al menos 4 caracteres" })
+        .min(4, { message: ErrorMessages.WEAK_PASSWORD })
 })
+    .refine(({ age }) => Number(age) >= 18, { message: ErrorMessages.NOT_ADULT, path: ['age'] })
 
 export type RegisterOwnerSchema = z.infer<typeof registerOwnerSchema>
 
@@ -20,10 +29,6 @@ export function RegisterOwnerForm({ id, title }: ModalProps) {
     const [isOpen, setIsOpen] = useState(false)
 
     const formMethods = useForm<RegisterOwnerSchema>({
-        defaultValues: {
-            email: '',
-            password: ''
-        },
         resolver: zodResolver(registerOwnerSchema)
     })
 
@@ -48,10 +53,55 @@ export function RegisterOwnerForm({ id, title }: ModalProps) {
     }
 
     return (
-        <Modal id={id} title={title} onClose={handleReset} isOpen={isOpen} setIsOpen={setIsOpen}>
+        <Modal id={id} title={title} onClose={handleReset} isOpen={isOpen} setIsOpen={setIsOpen} width="max-w-2xl">
             <FormProvider {...formMethods}>
                 <form noValidate className="flex flex-col gap-6" onSubmit={formMethods.handleSubmit(handleRegisterOwner)}>
                     <div>
+                        <div className="flex gap-4">
+                            <TextField
+                                id="firstName"
+                                name="firstName"
+                                type="text"
+                                label="Nombre"
+                                placeholder="John"
+                            />
+
+
+                            <TextField
+                                id="lastName"
+                                name="lastName"
+                                type="text"
+                                label="Apellido"
+                                placeholder="Doe"
+                            />
+
+                            <TextField
+                                id="age"
+                                name="age"
+                                type="number"
+                                label="Edad"
+                                placeholder="18"
+                            />
+                        </div>
+
+                        <div className="flex gap-4">
+                            <TextField
+                                id="identifierCode"
+                                name="identifierCode"
+                                type="text"
+                                label="Cédula de identidad"
+                                placeholder="V-5.555.555"
+                            />
+
+                            <TextField
+                                id="phoneNumber"
+                                name="phoneNumber"
+                                type="text"
+                                label="Número telefónico"
+                                placeholder="426-555-555"
+                            />
+                        </div>
+
                         <TextField
                             id="email"
                             name="email"
