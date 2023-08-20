@@ -1,10 +1,14 @@
 import * as trpc from '@trpc/server'
+import { z } from 'zod'
 import { registerOwnerSchema } from '~/components/admin/forms/RegisterOwnerForm'
+import { changePasswordSchema } from '~/pages/auth/change-password'
 import {
     createTRPCRouter,
-    protectedProcedure
+    protectedProcedure,
+    publicProcedure
 } from '~/server/api/trpc'
 import { sendMail } from '~/services/mailing'
+import { hashPassword } from '~/utils/encrypt/hashPassword'
 
 export const ownersRouter = createTRPCRouter({
     getAll: protectedProcedure
@@ -63,5 +67,30 @@ export const ownersRouter = createTRPCRouter({
                     email
                 }
             }
+        }),
+    concretePassword: publicProcedure
+        .input(changePasswordSchema.extend({ userId: z.string().nonempty() }))
+        .mutation(async ({ input, ctx }) => {
+            const { password, repeatedPassword, userId } = input
+
+            if (password !== repeatedPassword) {
+                throw new trpc.TRPCError({
+                    code: "BAD_REQUEST",
+                    message: "Password and password confirmation are mistmaching"
+                })
+            }
+
+            const hashedPassword = await hashPassword(password) 
+
+             await ctx.prisma.user.update({ where: { userId }, data: {
+                password: hashedPassword,
+                emailVerified: new Date()
+            }})
+
+            return {
+                status: 200,
+                message: "Owner has concreted its registration",
+            }
         })
+    
 })

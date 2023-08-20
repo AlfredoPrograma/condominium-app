@@ -68,11 +68,7 @@ export const authOptions: NextAuthOptions = {
           where: { email }
         })
 
-        if (!user) {
-          return null
-        }
-
-        if (await validatePassword(password, user.password)) {
+        if (!user || !user.password || await validatePassword(password, user.password)) {
           return null
         }
 
