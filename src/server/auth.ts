@@ -6,9 +6,9 @@ import {
   type DefaultSession,
 } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { signInSchema } from "~/pages/auth/sign-in";
 import { prisma } from "~/server/db";
 import { validatePassword } from "~/utils/encrypt/hashPassword";
-import { signInSchema } from "~/utils/validations/auth";
 
 type UserRole = "OWNER" | "ADMIN"
 

@@ -10,30 +10,20 @@ import { toast } from "react-toastify"
 
 import { TextField } from "~/components/common/forms/TextField"
 import { PageContainer } from "~/components/common/layouts/PageContainer"
-import { SignInSchema, signInSchema } from "~/utils/validations/auth"
 import { getDashboardRouteByRole } from "~/constants/routes"
 import { ErrorCodes, errors } from "~/constants/errors"
 import { useEffect } from "react"
+import { z } from "zod"
+import { ErrorMessages } from "~/utils/errors/errorMessages"
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-    const session = await getSession(ctx)
+export const signInSchema = z.object({
+    email: z.string().email({ message: ErrorMessages.INVALID_EMAIL }),
+    password: z
+        .string()
+        .min(4, { message: ErrorMessages.WEAK_PASSWORD })
+})
 
-    if (session) {
-        const destination = getDashboardRouteByRole(session.user.role)
-
-        return {
-            redirect: {
-                destination,
-                permanent: false
-            }
-        }
-    }
-
-    return {
-        props: {}
-    }
-}
-
+export type SignInSchema = z.infer<typeof signInSchema>
 
 export default function SignIn() {
     const session = useSession()
@@ -133,4 +123,23 @@ export default function SignIn() {
             </section>
         </PageContainer>
     )
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+    const session = await getSession(ctx)
+
+    if (session) {
+        const destination = getDashboardRouteByRole(session.user.role)
+
+        return {
+            redirect: {
+                destination,
+                permanent: false
+            }
+        }
+    }
+
+    return {
+        props: {}
+    }
 }

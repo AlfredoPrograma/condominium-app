@@ -66,7 +66,6 @@ export function RegisterOwnerForm({ id, title }: ModalProps) {
                                 placeholder="John"
                             />
 
-
                             <TextField
                                 id="lastName"
                                 name="lastName"
