@@ -4,7 +4,6 @@ import {
     createTRPCRouter,
     protectedProcedure
 } from '~/server/api/trpc'
-import { hashPassword } from '~/utils/encrypt/hashPassword'
 
 export const ownersRouter = createTRPCRouter({
     getAll: protectedProcedure
@@ -26,7 +25,7 @@ export const ownersRouter = createTRPCRouter({
     create: protectedProcedure
         .input(registerOwnerSchema)
         .mutation(async ({ input, ctx }) => {
-            const { email, password, age, firstName, identifierCode, lastName, phoneNumber } = input
+            const { email, age, firstName, identifierCode, lastName, phoneNumber } = input
 
             const exists = await ctx.prisma.user.findFirst({
                 where: { email }
@@ -39,8 +38,6 @@ export const ownersRouter = createTRPCRouter({
                 })
             }
 
-            const hashedPassword = await hashPassword(password)
-
             await ctx.prisma.user.create({
                 data: {
                     firstName,
@@ -49,7 +46,6 @@ export const ownersRouter = createTRPCRouter({
                     identifierCode,
                     phoneNumber,
                     email, 
-                    password: hashedPassword, 
                 }
             })
 

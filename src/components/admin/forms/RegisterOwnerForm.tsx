@@ -17,8 +17,6 @@ export const registerOwnerSchema = z.object({
     // TODO: identifier code should have a pattern
     phoneNumber: z.string().nonempty({ message: ErrorMessages.FIELD_REQUIRED }),
     email: z.string().email({ message: ErrorMessages.INVALID_EMAIL }),
-    password: z.string()
-        .min(4, { message: ErrorMessages.WEAK_PASSWORD })
 })
     .refine(({ age }) => Number(age) >= 18, { message: ErrorMessages.NOT_ADULT, path: ['age'] })
 
@@ -107,14 +105,6 @@ export function RegisterOwnerForm({ id, title }: ModalProps) {
                             type="email"
                             label="Correo electrónico"
                             placeholder="prueba@correo.com"
-                        />
-
-                        <TextField
-                            id="password"
-                            name="password"
-                            type="password"
-                            label="Contraseña"
-                            placeholder="******"
                         />
                     </div>
 

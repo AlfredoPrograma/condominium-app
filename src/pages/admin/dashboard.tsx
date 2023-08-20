@@ -9,8 +9,7 @@ import { QuickAction } from "~/components/common/navigation/QuickAction";
 import { api } from "~/utils/api";
 import { OwnersTable } from "~/components/admin/tables/OwnersTable";
 
-interface AdminLayoutProps extends WithUser {
-}
+interface AdminLayoutProps extends WithUser { }
 
 export default function AdminLayout({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
     const { data } = api.owners.getAll.useQuery()

@@ -27,7 +27,7 @@ model User {
     identifierCode String
     phoneNumber    String
     email          String     @unique
-    password       String
+    password       String?
     role           Role       @default(OWNER)
     isActive       Boolean    @default(true)
     properties     Property[]
