@@ -4,6 +4,7 @@ import {
     createTRPCRouter,
     protectedProcedure
 } from '~/server/api/trpc'
+import { sendMail } from '~/services/mailing'
 
 export const ownersRouter = createTRPCRouter({
     getAll: protectedProcedure
@@ -38,7 +39,7 @@ export const ownersRouter = createTRPCRouter({
                 })
             }
 
-            await ctx.prisma.user.create({
+            const newOwner = await ctx.prisma.user.create({
                 data: {
                     firstName,
                     lastName,
@@ -47,6 +48,12 @@ export const ownersRouter = createTRPCRouter({
                     phoneNumber,
                     email, 
                 }
+            })
+
+            await sendMail({
+                subject: 'Culmina tu registro',
+                to: newOwner.email,
+                text: `http://localhost:3000/auth/change-password?userId=${newOwner.userId}`
             })
 
             return {

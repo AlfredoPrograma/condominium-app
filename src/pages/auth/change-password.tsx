@@ -21,8 +21,6 @@ interface ChangePasswordProps {
 }
 
 export default function ChangePassword({ userId }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-
-    console.log(userId)
     const formMethods = useForm<ChangePasswordSchema>({
         resolver: zodResolver(changePasswordSchema)
     })
