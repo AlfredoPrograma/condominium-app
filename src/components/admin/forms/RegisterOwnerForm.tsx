@@ -1,18 +1,28 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { toast } from "react-toastify"
 import { z } from "zod"
 import { TextField } from "~/components/common/forms/TextField"
+import { api } from "~/utils/api"
 
-const registerOwnerSchema = z.object({
+export const registerOwnerSchema = z.object({
     email: z.string().email({ message: "Correo electrónico inválido " }),
     password: z.string()
         .min(4, { message: "La contraseña debe tener al menos 4 caracteres" })
 })
 
-type RegisterOwnerSchema = z.infer<typeof registerOwnerSchema>
+export type RegisterOwnerSchema = z.infer<typeof registerOwnerSchema>
 
 export function RegisterOwnerForm() {
+    const { mutate: mutateRegisterOwner } = api.owners.create.useMutation({
+        onSuccess: () => {
+            toast("Propietario creado exitosamente", { type: 'success' })
+        },
+        onError: () => {
+            toast("Hubo un error durante la creación del propietario", { type: 'error' })
+        }
+    })
+
     const formMethods = useForm<RegisterOwnerSchema>({
         defaultValues: {
             email: '',
@@ -22,12 +32,12 @@ export function RegisterOwnerForm() {
     })
 
     const handleRegisterOwner = (data: RegisterOwnerSchema) => {
-        console.log(data)
+        mutateRegisterOwner(data)
     }
 
     return (
         <FormProvider {...formMethods}>
-            <form className="flex flex-col gap-6" onSubmit={formMethods.handleSubmit(handleRegisterOwner)}>
+            <form noValidate className="flex flex-col gap-6" onSubmit={formMethods.handleSubmit(handleRegisterOwner)}>
                 <div>
                     <TextField
                         id="email"

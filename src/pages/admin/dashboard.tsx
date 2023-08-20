@@ -5,10 +5,14 @@ import { WithUser, verifySession } from "~/utils/auth/session";
 
 import { ADMIN_QUICK_ACTIONS } from "~/constants/dashboards/quickActions";
 import { QuickAction } from "~/components/common/navigation/QuickAction";
+import { api } from "~/utils/api";
 
-interface AdminLayoutProps extends WithUser { }
+interface AdminLayoutProps extends WithUser {
+}
 
 export default function AdminLayout({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+    const { data } = api.owners.getAll.useQuery()
+
     return (
         <DashboardLayout>
             <section className="bg-white rounded-xl shadow-sm p-8 flex flex-col gap-4">
