@@ -1,7 +1,4 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-
-import DataTable, { TableColumn } from 'react-data-table-component'
-
 import { DashboardLayout } from "~/components/common/layouts";
 import { WithUser, verifySession } from "~/utils/auth/session";
 import { ADMIN_QUICK_ACTIONS } from "~/constants/dashboards/quickActions";

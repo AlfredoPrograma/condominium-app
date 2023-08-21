@@ -18,8 +18,12 @@ export const ownersRouter = createTRPCRouter({
             const owners = await ctx.prisma.user.findMany({ where: {
                 role: 'OWNER'
             }, select: {
+                firstName: true,
+                lastName: true,
+                phoneNumber: true,
+                identifierCode: true,
                 userId: true,
-                email: true
+                email: true,
             }})
 
             return {
