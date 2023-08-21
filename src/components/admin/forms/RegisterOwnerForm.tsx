@@ -30,7 +30,7 @@ export function RegisterOwnerForm({ id, title }: ModalProps) {
         resolver: zodResolver(registerOwnerSchema)
     })
 
-    const { mutate: mutateRegisterOwner } = api.owners.create.useMutation({
+    const { mutate: mutateRegisterOwner, isLoading } = api.owners.create.useMutation({
         onSuccess: () => {
             trpcUtils.invalidate(undefined, { queryKey: ['owners.getAll'] })
             toast("Propietario creado exitosamente", { type: 'success' })
@@ -40,7 +40,6 @@ export function RegisterOwnerForm({ id, title }: ModalProps) {
             toast("Hubo un error durante la creación del propietario", { type: 'error' })
         }
     })
-
 
     const handleRegisterOwner = (data: RegisterOwnerSchema) => {
         mutateRegisterOwner(data)
@@ -109,7 +108,14 @@ export function RegisterOwnerForm({ id, title }: ModalProps) {
                     </div>
 
                     <footer className="flex justify-end">
-                        <button type="submit" className="btn btn-primary">Crear</button>
+                        {isLoading ?
+                            <button className="btn btn-primary">
+                                <span className="loading loading-spinner"></span>
+                                Creando
+                            </button>
+                            :
+                            <button type="submit" className="btn btn-primary">Crear</button>
+                        }
                     </footer>
                 </form>
             </FormProvider>
