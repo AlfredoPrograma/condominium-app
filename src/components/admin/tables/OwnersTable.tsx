@@ -1,6 +1,8 @@
 import { User } from "@prisma/client";
 import { useReactTable, createColumnHelper, getCoreRowModel, flexRender } from '@tanstack/react-table'
 import { MdEdit as EditIcon, MdDelete as DeleteIcon } from 'react-icons/md'
+import { toast } from "react-toastify";
+import { api } from "~/utils/api";
 
 type Owner = Pick<User, 'email' | 'userId' | 'identifierCode' | 'firstName' | 'lastName' | 'phoneNumber'>
 
@@ -9,8 +11,21 @@ interface OwnersTableProps {
 }
 
 export function OwnersTable({ owners }: OwnersTableProps) {
+    const trpcUtils = api.useContext()
+    const { mutate: mutateDeleteOwner } = api.owners.delete.useMutation({
+        onSuccess: () => {
+            trpcUtils.invalidate(undefined, { queryKey: ['owners.getAll'] })
+            toast('Propietario eliminado exitosamente', { type: 'success' })
+        }
+    })
+
     const columnHelper = createColumnHelper<Owner>()
+
     const columns = [
+        columnHelper.accessor(row => row.userId, {
+            id: 'userId'
+        }),
+
         columnHelper.accessor(row => row.identifierCode, {
             id: 'identifierCode',
             cell: info => info.getValue(),
@@ -33,12 +48,12 @@ export function OwnersTable({ owners }: OwnersTableProps) {
         }),
         columnHelper.display({
             id: 'actions',
-            cell: () => (
+            cell: ({ row }) => (
                 <div className="flex gap-2">
                     <button className="btn btn-warning btn-square btn-sm">
                         <EditIcon size={20} />
                     </button>
-                    <button className="btn btn-error btn-square btn-sm">
+                    <button onClick={() => mutateDeleteOwner({ userId: row.getValue('userId') })} className="btn btn-error btn-square btn-sm">
                         <DeleteIcon size={20} />
                     </button>
                 </div>
@@ -47,13 +62,22 @@ export function OwnersTable({ owners }: OwnersTableProps) {
         })
     ]
 
-    const table = useReactTable({ columns, data: owners, getCoreRowModel: getCoreRowModel() })
+    const { getHeaderGroups, getRowModel } = useReactTable({
+        initialState: {
+            columnVisibility: { userId: false }
+        },
+        columns,
+        data: owners,
+        getCoreRowModel: getCoreRowModel()
+    })
+
+
 
     return (
         <div className="overflow-x-auto">
             <table className="table">
                 <thead>
-                    {table.getHeaderGroups().map((headerGroup) => (
+                    {getHeaderGroups().map((headerGroup) => (
                         <tr key={headerGroup.id}>
                             {headerGroup.headers.map((header) => (
                                 <th key={header.id}>
@@ -69,7 +93,7 @@ export function OwnersTable({ owners }: OwnersTableProps) {
                     ))}
                 </thead>
                 <tbody>
-                    {table.getRowModel().rows.map((row) => (
+                    {getRowModel().rows.map((row) => (
                         <tr key={row.id}>
                             {row.getVisibleCells().map((cell) => (
                                 <td key={cell.id}>

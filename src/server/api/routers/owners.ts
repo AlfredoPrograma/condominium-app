@@ -12,11 +12,16 @@ import {
 import { sendMail } from '~/services/mailing'
 import { hashPassword } from '~/utils/encrypt/hashPassword'
 
+const withUserIdSchema = z.object({
+    userId: z.string().nonempty()
+})
+
 export const ownersRouter = createTRPCRouter({
     getAll: protectedProcedure
         .query(async ({ ctx }) => {
             const owners = await ctx.prisma.user.findMany({ where: {
-                role: 'OWNER'
+                role: 'OWNER',
+                isActive: true
             }, select: {
                 firstName: true,
                 lastName: true,
@@ -76,8 +81,27 @@ export const ownersRouter = createTRPCRouter({
                 }
             }
         }),
+
+    delete: protectedProcedure.input(withUserIdSchema).mutation(async ({ input, ctx }) => {
+        const { userId } = input
+
+        await ctx.prisma.user.update({
+            where: {
+                userId
+            },
+            data: {
+                isActive: false
+            }
+        })
+
+        return {
+            status: 200,
+            message: "Owner deleted successfully"
+        }
+    }),
+
     concretePassword: publicProcedure
-        .input(changePasswordSchema.extend({ userId: z.string().nonempty() }))
+        .input(changePasswordSchema.extend({ ...withUserIdSchema.shape }))
         .mutation(async ({ input, ctx }) => {
             const { password, repeatedPassword, userId } = input
 
@@ -99,6 +123,5 @@ export const ownersRouter = createTRPCRouter({
                 status: 200,
                 message: "Owner has concreted its registration",
             }
-        })
-    
+        }),
 })
