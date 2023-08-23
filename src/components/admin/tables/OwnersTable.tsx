@@ -2,6 +2,7 @@ import { User } from "@prisma/client";
 import { useReactTable, createColumnHelper, getCoreRowModel, flexRender } from '@tanstack/react-table'
 import { MdEdit as EditIcon, MdDelete as DeleteIcon } from 'react-icons/md'
 import { toast } from "react-toastify";
+import { Table } from "~/components/common/tables/Table";
 import { api } from "~/utils/api";
 
 
@@ -84,37 +85,5 @@ export function OwnersTable({ owners }: OwnersTableProps) {
 
 
 
-    return (
-        <div className="overflow-x-auto">
-            <table className="table">
-                <thead>
-                    {getHeaderGroups().map((headerGroup) => (
-                        <tr key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => (
-                                <th key={header.id}>
-                                    {header.isPlaceholder
-                                        ? null
-                                        : flexRender(
-                                            header.column.columnDef.header,
-                                            header.getContext()
-                                        )}
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                </thead>
-                <tbody>
-                    {getRowModel().rows.map((row) => (
-                        <tr key={row.id}>
-                            {row.getVisibleCells().map((cell) => (
-                                <td key={cell.id}>
-                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    )
+    return <Table headers={getHeaderGroups()} rowsModel={getRowModel()} />
 }
