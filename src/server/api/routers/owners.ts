@@ -33,6 +33,7 @@ export const ownersRouter = createTRPCRouter({
                 identifierCode: true,
                 userId: true,
                 email: true,
+                age: true,
                 properties: {
                     select: {
                         propertyId: true,

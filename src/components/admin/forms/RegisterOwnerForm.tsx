@@ -7,6 +7,7 @@ import { TextField } from "~/components/common/forms/TextField"
 import { Modal, ModalProps } from "~/components/common/modals/Modal"
 import { api } from "~/utils/api"
 import { ErrorMessages } from "~/utils/errors/errorMessages"
+import { Owner } from "../tables/OwnersTable"
 
 export const registerOwnerSchema = z.object({
     firstName: z.string().nonempty({ message: ErrorMessages.FIELD_REQUIRED }),
@@ -23,7 +24,11 @@ export const registerOwnerSchema = z.object({
 
 export type RegisterOwnerSchema = z.infer<typeof registerOwnerSchema>
 
-export function RegisterOwnerForm({ id, title }: ModalProps) {
+interface RegisterOwnerFormProps extends ModalProps {
+    owner: Owner | null
+}
+
+export function RegisterOwnerForm({ id, title, owner, onClose }: RegisterOwnerFormProps) {
     const trpcUtils = api.useContext()
     const [isOpen, setIsOpen] = useState(false)
 
@@ -48,10 +53,26 @@ export function RegisterOwnerForm({ id, title }: ModalProps) {
 
     const handleReset = () => {
         formMethods.reset()
+        onClose?.()
+    }
+
+    const handlePreloadOwner = (data: Owner | null) => {
+        if (data) {
+            const { userId, ...rest } = data
+            const preload: RegisterOwnerSchema = {
+                ...rest,
+                propertyCode: rest.properties[0]!.code,
+                age: rest.age.toString()
+            }
+
+            Object.entries(preload).forEach(([field, value]) => {
+                formMethods.setValue(field as keyof RegisterOwnerSchema, value)
+            })
+        }
     }
 
     return (
-        <Modal id={id} title={title} onClose={handleReset} isOpen={isOpen} setIsOpen={setIsOpen} width="max-w-2xl">
+        <Modal id={id} title={title} onClose={handleReset} onOpen={() => handlePreloadOwner(owner)} isOpen={isOpen} setIsOpen={setIsOpen} width="max-w-2xl">
             <FormProvider {...formMethods}>
                 <form noValidate className="flex flex-col gap-6" onSubmit={formMethods.handleSubmit(handleRegisterOwner)}>
                     <div>

@@ -1,19 +1,25 @@
 import { useReactTable, createColumnHelper, getCoreRowModel } from '@tanstack/react-table'
+import { useState } from 'react';
 import { MdEdit as EditIcon, MdDelete as DeleteIcon } from 'react-icons/md'
 import { toast } from "react-toastify";
 import { Table } from "~/components/common/tables/Table";
 import { RouterOutputs, api } from "~/utils/api";
+import { RegisterOwnerForm } from '../forms/RegisterOwnerForm';
 
 interface ActionProps {
+    handleEditOwner: () => void
     handleDeleteOwner: () => void
 }
 
-function Actions({ handleDeleteOwner }: ActionProps) {
+function Actions({ handleDeleteOwner, handleEditOwner }: ActionProps) {
     return (
         <div className="flex gap-1">
-            <button className="btn btn-ghost btn-square btn-sm">
+            <label htmlFor='UPDATE_OWNER' onClick={(e) => {
+                handleEditOwner()
+                e.currentTarget.click()
+            }} className="btn btn-ghost btn-square btn-sm">
                 <EditIcon size={20} className="fill-sky-500" />
-            </button>
+            </label>
             <button onClick={handleDeleteOwner} className="btn btn-ghost btn-square btn-sm">
                 <DeleteIcon size={20} className="fill-red-500" />
             </button>
@@ -22,7 +28,7 @@ function Actions({ handleDeleteOwner }: ActionProps) {
 }
 
 type OwnersList = RouterOutputs['owners']['getAll']['owners']
-type Owner = OwnersList[number]
+export type Owner = OwnersList[number]
 
 interface OwnersTableProps {
     owners: OwnersList
@@ -30,7 +36,10 @@ interface OwnersTableProps {
 
 export function OwnersTable({ owners }: OwnersTableProps) {
     const trpcUtils = api.useContext()
+    const [selectedOwner, setSelectedOwner] = useState<Owner | null>(null)
 
+
+    console.log(selectedOwner)
     const { mutate: mutateDeleteOwner } = api.owners.delete.useMutation({
         onSuccess: () => {
             trpcUtils.invalidate(undefined, { queryKey: ['owners.getAll'] })
@@ -72,7 +81,7 @@ export function OwnersTable({ owners }: OwnersTableProps) {
         }),
         columnHelper.display({
             id: 'actions',
-            cell: ({ row }) => <Actions handleDeleteOwner={() => mutateDeleteOwner({ userId: row.original.userId })} />,
+            cell: ({ row }) => <Actions handleEditOwner={() => setSelectedOwner(row.original)} handleDeleteOwner={() => mutateDeleteOwner({ userId: row.original.userId })} />,
             header: "Acciones"
         })
     ]
@@ -88,5 +97,10 @@ export function OwnersTable({ owners }: OwnersTableProps) {
 
 
 
-    return <Table headers={getHeaderGroups()} rowsModel={getRowModel()} />
+    return (
+        <>
+            <Table headers={getHeaderGroups()} rowsModel={getRowModel()} />
+            <RegisterOwnerForm id='UPDATE_OWNER' owner={selectedOwner} onClose={() => setSelectedOwner(null)} />
+        </>
+    )
 }

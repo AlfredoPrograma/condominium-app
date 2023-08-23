@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, SetStateAction } from 'react'
+import { ChangeEvent, Dispatch, SetStateAction, useEffect } from 'react'
 import { MdClose as CloseIcon } from 'react-icons/md'
 import { twMerge } from 'tailwind-merge'
 
@@ -9,17 +9,18 @@ export interface ModalProps {
     title?: string,
     children?: JSX.Element | JSX.Element[]
     onClose?: () => void
+    onOpen?: () => void
     width?: string
 }
 
-export function Modal({ id, title, isOpen, width, setIsOpen, onClose, children }: ModalProps) {
+export function Modal({ id, title, isOpen, width, setIsOpen, onClose, onOpen, children }: ModalProps) {
     const handleClose = (event: ChangeEvent<HTMLInputElement>) => {
-        if (!isOpen) {
-            onClose?.()
-        }
-
         setIsOpen?.(event.target.checked)
     }
+
+    useEffect(() => {
+        isOpen ? onOpen?.() : onClose?.()
+    }, [isOpen])
 
     return (
         <>
