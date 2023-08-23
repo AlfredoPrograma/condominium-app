@@ -7,10 +7,10 @@ import { QuickActionProps } from "~/components/common/navigation/QuickAction";
 export const ADMIN_QUICK_ACTIONS: QuickActionProps[] = [
     {
         id: 'NEW_OWNER',
-        title: 'Registrar nuevo residente',
-        description: 'Agrega un nuevo residente a la base de datos del condominio.',
+        title: 'Registrar nuevo propietario',
+        description: 'Agrega un nuevo propietario a la base de datos del condominio.',
         icon: <AddOwnerIcon size={48} />,
-        modal: <RegisterOwnerForm id='NEW_OWNER' title='Registrar nuevo residente' />,
+        modal: <RegisterOwnerForm id='NEW_OWNER' title='Registrar nuevo propietario' owner={null} />,
         color: 'bg-emerald-600'
     },
     {
@@ -24,7 +24,7 @@ export const ADMIN_QUICK_ACTIONS: QuickActionProps[] = [
     {
         id: 'NEW_COMMON_AREA_RESERVATION',
         title: 'Reservar áreas comunes',
-        description: 'Permite a los residentes reservar áreas comunes como salones, piscina o parrilleras para eventos.',
+        description: 'Permite a los propietarios realizar reservaciones de áreas comunes.',
         icon: <CalendarIcon size={48} />,
         modal: <Modal id='NEW_COMMON_AREA_RESERVATION' />,
         color: 'bg-blue-400'

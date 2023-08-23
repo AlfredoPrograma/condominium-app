@@ -55,7 +55,7 @@ export default function ChangePassword({ userId }: InferGetServerSidePropsType<t
             <section className="flex justify-center p-8">
                 <div className="flex flex-col gap-6">
                     <header>
-                        <h1 className="text-3xl font-bold">Registro de nuevo residente</h1>
+                        <h1 className="text-3xl font-bold">Registro de nuevo propietario</h1>
                     </header>
                     <FormProvider {...formMethods}>
                         <form onSubmit={formMethods.handleSubmit(handleChangePassword)} className="flex flex-col gap-4">
