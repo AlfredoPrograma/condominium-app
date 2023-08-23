@@ -4,6 +4,25 @@ import { MdEdit as EditIcon, MdDelete as DeleteIcon } from 'react-icons/md'
 import { toast } from "react-toastify";
 import { api } from "~/utils/api";
 
+
+interface ActionProps {
+    handleDeleteOwner: () => void
+}
+
+function Actions({ handleDeleteOwner }: ActionProps) {
+    return (
+        <div className="flex gap-1">
+            <button className="btn btn-ghost btn-square btn-sm">
+                <EditIcon size={20} className="fill-sky-500" />
+            </button>
+            <button onClick={handleDeleteOwner} className="btn btn-ghost btn-square btn-sm">
+                <DeleteIcon size={20} className="fill-red-500" />
+            </button>
+        </div>
+    )
+}
+
+
 type Owner = Pick<User, 'email' | 'userId' | 'identifierCode' | 'firstName' | 'lastName' | 'phoneNumber'>
 
 interface OwnersTableProps {
@@ -12,6 +31,7 @@ interface OwnersTableProps {
 
 export function OwnersTable({ owners }: OwnersTableProps) {
     const trpcUtils = api.useContext()
+
     const { mutate: mutateDeleteOwner } = api.owners.delete.useMutation({
         onSuccess: () => {
             trpcUtils.invalidate(undefined, { queryKey: ['owners.getAll'] })
@@ -48,16 +68,7 @@ export function OwnersTable({ owners }: OwnersTableProps) {
         }),
         columnHelper.display({
             id: 'actions',
-            cell: ({ row }) => (
-                <div className="flex gap-2">
-                    <button className="btn btn-warning btn-square btn-sm">
-                        <EditIcon size={20} />
-                    </button>
-                    <button onClick={() => mutateDeleteOwner({ userId: row.getValue('userId') })} className="btn btn-error btn-square btn-sm">
-                        <DeleteIcon size={20} />
-                    </button>
-                </div>
-            ),
+            cell: ({ row }) => <Actions handleDeleteOwner={() => mutateDeleteOwner({ userId: row.original.userId })} />,
             header: "Acciones"
         })
     ]
