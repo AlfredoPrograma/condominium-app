@@ -11,6 +11,8 @@ import {
 } from '~/server/api/trpc'
 import { sendMail } from '~/services/mailing'
 import { hashPassword } from '~/utils/encrypt/hashPassword'
+import { AppRouter } from '../root'
+import { RouterOutputs } from '~/utils/api'
 
 const withUserIdSchema = z.object({
     userId: z.string().nonempty()
@@ -19,24 +21,33 @@ const withUserIdSchema = z.object({
 export const ownersRouter = createTRPCRouter({
     getAll: protectedProcedure
         .query(async ({ ctx }) => {
-            const owners = await ctx.prisma.user.findMany({ where: {
+            const owners = await ctx.prisma.user.findMany({ 
+            where: {
                 role: 'OWNER',
                 isActive: true
-            }, select: {
+            }, 
+            select: {
                 firstName: true,
                 lastName: true,
                 phoneNumber: true,
                 identifierCode: true,
                 userId: true,
                 email: true,
-            }})
+                properties: {
+                    select: {
+                        propertyId: true,
+                        code: true
+                    }
+                },
+            },
+        })
 
-            return {
-                status: 200,
-                message: "Owners found sucessfully",
-                owners
-            }
-        }),
+        return {
+            status: 200,
+            message: "Owners found sucessfully",
+            owners
+        }
+    }),
 
     create: protectedProcedure
         .input(registerOwnerSchema)
@@ -132,3 +143,4 @@ export const ownersRouter = createTRPCRouter({
             }
         }),
 })
+

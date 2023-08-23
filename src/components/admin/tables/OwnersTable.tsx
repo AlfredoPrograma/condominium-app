@@ -1,10 +1,8 @@
-import { User } from "@prisma/client";
-import { useReactTable, createColumnHelper, getCoreRowModel, flexRender } from '@tanstack/react-table'
+import { useReactTable, createColumnHelper, getCoreRowModel } from '@tanstack/react-table'
 import { MdEdit as EditIcon, MdDelete as DeleteIcon } from 'react-icons/md'
 import { toast } from "react-toastify";
 import { Table } from "~/components/common/tables/Table";
-import { api } from "~/utils/api";
-
+import { RouterOutputs, api } from "~/utils/api";
 
 interface ActionProps {
     handleDeleteOwner: () => void
@@ -23,11 +21,11 @@ function Actions({ handleDeleteOwner }: ActionProps) {
     )
 }
 
-
-type Owner = Pick<User, 'email' | 'userId' | 'identifierCode' | 'firstName' | 'lastName' | 'phoneNumber'>
+type OwnersList = RouterOutputs['owners']['getAll']['owners']
+type Owner = OwnersList[number]
 
 interface OwnersTableProps {
-    owners: Owner[]
+    owners: OwnersList
 }
 
 export function OwnersTable({ owners }: OwnersTableProps) {
@@ -56,6 +54,11 @@ export function OwnersTable({ owners }: OwnersTableProps) {
             id: 'fullName',
             cell: info => info.getValue(),
             header: () => "Nombre completo",
+        }),
+        columnHelper.accessor(row => row.properties.map(p => p.code).join(','), {
+            id: 'code',
+            cell: info => info.getValue(),
+            header: () => "Código de propiedad(es)",
         }),
         columnHelper.accessor(row => row.email, {
             id: 'email',
