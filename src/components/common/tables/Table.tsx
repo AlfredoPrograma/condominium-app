@@ -1,4 +1,4 @@
-import { HeaderGroup, RowModel, flexRender } from "@tanstack/react-table";
+import { type HeaderGroup, type RowModel, flexRender } from "@tanstack/react-table";
 
 interface TableProps<T> {
     headers: HeaderGroup<T>[]

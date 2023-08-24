@@ -1,10 +1,10 @@
-import {  GetServerSidePropsContext, GetServerSidePropsResult } from "next";
-import { Session } from "next-auth";
+import {  type GetServerSidePropsContext, type GetServerSidePropsResult } from "next";
+import { type Session } from "next-auth";
 import { getSession } from "next-auth/react";
 import { getDashboardRouteByRole, routes } from "~/constants/routes";
 
 export interface WithUser {
-    user: Session['user']
+    user: Session["user"]
 }
 
 type SessionCallback<T> = ({ session }: { session: Session }) => GetServerSidePropsResult<T>

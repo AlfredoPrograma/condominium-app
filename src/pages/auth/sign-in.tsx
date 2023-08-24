@@ -1,4 +1,4 @@
-import { GetServerSideProps } from "next"
+import { type GetServerSideProps } from "next"
 import { useRouter } from "next/router"
 import Image from "next/image"
 import Link from "next/link"
@@ -11,7 +11,7 @@ import { toast } from "react-toastify"
 import { TextField } from "~/components/common/forms/TextField"
 import { PageContainer } from "~/components/common/layouts/PageContainer"
 import { getDashboardRouteByRole } from "~/constants/routes"
-import { ErrorCodes, errors } from "~/constants/errors"
+import { type ErrorCodes, errors } from "~/constants/errors"
 import { useEffect } from "react"
 import { z } from "zod"
 import { ErrorMessages } from "~/utils/errors/errorMessages"
@@ -32,8 +32,8 @@ export default function SignIn() {
     const formMethods = useForm<SignInSchema>({
         resolver: zodResolver(signInSchema),
         defaultValues: {
-            email: '',
-            password: ''
+            email: "",
+            password: ""
         }
     })
 

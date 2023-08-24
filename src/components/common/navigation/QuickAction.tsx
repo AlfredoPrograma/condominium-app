@@ -12,7 +12,7 @@ export interface QuickActionProps {
 export function QuickAction({ id, title, description, icon, modal, color }: QuickActionProps) {
     return (
         <>
-            <label htmlFor={id} className={twMerge('card text-white shadow-md cursor-pointer transition-all select-none hover:brightness-90', color)}>
+            <label htmlFor={id} className={twMerge("card text-white shadow-md cursor-pointer transition-all select-none hover:brightness-90", color)}>
                 <div className="p-6 grid grid-cols-[60px_1fr] gap-4">
                     <div className="self-center">
                         {icon}

@@ -1,5 +1,5 @@
-import nodemailer, { SendMailOptions } from 'nodemailer'
-import { env } from '~/env.mjs'
+import nodemailer, { type SendMailOptions } from "nodemailer"
+import { env } from "~/env.mjs"
 
 interface MailPayload {
     subject: string,
@@ -9,7 +9,7 @@ interface MailPayload {
 
 export async function sendMail({ subject, to, text }: MailPayload) {
     const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        service: "gmail",
         auth: {
             user: env.NODEMAILER_EMAIL,
             pass: env.NODEMAILER_PASSWORD

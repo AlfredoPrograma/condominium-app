@@ -1,9 +1,9 @@
-import { signOut } from 'next-auth/react'
-import { useRouter } from 'next/router'
+import { signOut } from "next-auth/react"
+import { useRouter } from "next/router"
 
-import { MdNotificationsNone as NotificationsIcon, MdOutlineSearch as SearchIcon, } from 'react-icons/md'
+import { MdNotificationsNone as NotificationsIcon, MdOutlineSearch as SearchIcon, } from "react-icons/md"
 
-import { routes } from '~/constants/routes'
+import { routes } from "~/constants/routes"
 
 export function Navbar() {
     const router = useRouter()

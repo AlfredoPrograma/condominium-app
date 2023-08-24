@@ -1,10 +1,10 @@
-import { useReactTable, createColumnHelper, getCoreRowModel } from '@tanstack/react-table'
-import { useState } from 'react';
-import { MdEdit as EditIcon, MdDelete as DeleteIcon } from 'react-icons/md'
+import { createColumnHelper, getCoreRowModel, useReactTable } from "@tanstack/react-table"
+import { useState } from "react";
+import { MdDelete as DeleteIcon, MdEdit as EditIcon } from "react-icons/md"
 import { toast } from "react-toastify";
 import { Table } from "~/components/common/tables/Table";
-import { RouterOutputs, api } from "~/utils/api";
-import { RegisterOwnerForm } from '../forms/RegisterOwnerForm';
+import { type RouterOutputs, api } from "~/utils/api";
+import { RegisterOwnerForm } from "../forms/RegisterOwnerForm";
 
 interface ActionProps {
     handleEditOwner: () => void
@@ -27,7 +27,7 @@ function Actions({ handleDeleteOwner, handleEditOwner }: ActionProps) {
     )
 }
 
-type OwnersList = RouterOutputs['owners']['getAll']['owners']
+type OwnersList = RouterOutputs["owners"]["getAll"]["owners"]
 export type Owner = OwnersList[number]
 
 interface OwnersTableProps {
@@ -42,8 +42,8 @@ export function OwnersTable({ owners }: OwnersTableProps) {
     console.log(selectedOwner)
     const { mutate: mutateDeleteOwner } = api.owners.delete.useMutation({
         onSuccess: () => {
-            trpcUtils.invalidate(undefined, { queryKey: ['owners.getAll'] })
-            toast('Propietario eliminado exitosamente', { type: 'success' })
+            trpcUtils.invalidate(undefined, { queryKey: ["owners.getAll"] })
+            toast("Propietario eliminado exitosamente", { type: "success" })
         }
     })
 
@@ -51,36 +51,36 @@ export function OwnersTable({ owners }: OwnersTableProps) {
 
     const columns = [
         columnHelper.accessor(row => row.userId, {
-            id: 'userId'
+            id: "userId"
         }),
 
         columnHelper.accessor(row => row.identifierCode, {
-            id: 'identifierCode',
+            id: "identifierCode",
             cell: info => info.getValue(),
             header: () => "Cédula de identidad",
         }),
         columnHelper.accessor(row => `${row.firstName} ${row.lastName}`, {
-            id: 'fullName',
+            id: "fullName",
             cell: info => info.getValue(),
             header: () => "Nombre completo",
         }),
-        columnHelper.accessor(row => row.properties.map(p => p.code).join(','), {
-            id: 'code',
+        columnHelper.accessor(row => row.properties.map(p => p.code).join(","), {
+            id: "code",
             cell: info => info.getValue(),
             header: () => "Código de propiedad(es)",
         }),
         columnHelper.accessor(row => row.email, {
-            id: 'email',
+            id: "email",
             cell: info => info.getValue(),
             header: () => "Correo electrónico"
         }),
         columnHelper.accessor(row => row.phoneNumber, {
-            id: 'phoneNumber',
+            id: "phoneNumber",
             cell: info => info.getValue(),
             header: () => "Número telefónico"
         }),
         columnHelper.display({
-            id: 'actions',
+            id: "actions",
             cell: ({ row }) => <Actions handleEditOwner={() => setSelectedOwner(row.original)} handleDeleteOwner={() => mutateDeleteOwner({ userId: row.original.userId })} />,
             header: "Acciones"
         })

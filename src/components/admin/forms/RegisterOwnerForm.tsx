@@ -4,10 +4,10 @@ import { FormProvider, useForm } from "react-hook-form"
 import { toast } from "react-toastify"
 import { z } from "zod"
 import { TextField } from "~/components/common/forms/TextField"
-import { Modal, ModalProps } from "~/components/common/modals/Modal"
+import { Modal, type ModalProps } from "~/components/common/modals/Modal"
 import { api } from "~/utils/api"
 import { ErrorMessages } from "~/utils/errors/errorMessages"
-import { Owner } from "../tables/OwnersTable"
+import { type Owner } from "../tables/OwnersTable"
 
 export const registerOwnerSchema = z.object({
     firstName: z.string().nonempty({ message: ErrorMessages.FIELD_REQUIRED }),
@@ -20,7 +20,7 @@ export const registerOwnerSchema = z.object({
     email: z.string().email({ message: ErrorMessages.INVALID_EMAIL }),
     propertyCode: z.string().nonempty({ message: ErrorMessages.FIELD_REQUIRED })
 })
-    .refine(({ age }) => Number(age) >= 18, { message: ErrorMessages.NOT_ADULT, path: ['age'] })
+    .refine(({ age }) => Number(age) >= 18, { message: ErrorMessages.NOT_ADULT, path: ["age"] })
 
 export type RegisterOwnerSchema = z.infer<typeof registerOwnerSchema>
 
@@ -38,12 +38,12 @@ export function RegisterOwnerForm({ id, title, owner, onClose }: RegisterOwnerFo
 
     const { mutate: mutateRegisterOwner, isLoading } = api.owners.create.useMutation({
         onSuccess: () => {
-            trpcUtils.invalidate(undefined, { queryKey: ['owners.getAll'] })
-            toast("Propietario creado exitosamente", { type: 'success' })
+            trpcUtils.invalidate(undefined, { queryKey: ["owners.getAll"] })
+            toast("Propietario creado exitosamente", { type: "success" })
             setIsOpen(false)
         },
         onError: () => {
-            toast("Hubo un error durante la creación del propietario", { type: 'error' })
+            toast("Hubo un error durante la creación del propietario", { type: "error" })
         }
     })
 

@@ -1,9 +1,9 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { type GetServerSidePropsContext } from "next";
 import {
-  getServerSession,
-  type NextAuthOptions,
   type DefaultSession,
+  type NextAuthOptions,
+  getServerSession,
 } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { signInSchema } from "~/pages/auth/sign-in";
@@ -47,15 +47,15 @@ declare module "next-auth/jwt" {
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
     maxAge: 15 * 24 * 30 * 60
   },
   pages: {
-    signIn: '/auth/sign-in',
+    signIn: "/auth/sign-in",
   },
   providers: [
     CredentialsProvider({
-      name: 'credentials',
+      name: "credentials",
       credentials: {
         email: { type: "text" },
         password: { type: "password" }
@@ -68,7 +68,7 @@ export const authOptions: NextAuthOptions = {
           where: { email }
         })
 
-        if (!user || !user.password || await validatePassword(password, user.password)) {
+        if (!user?.password || await validatePassword(password, user.password)) {
           return null
         }
 

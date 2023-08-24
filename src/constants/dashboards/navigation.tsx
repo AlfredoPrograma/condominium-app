@@ -1,5 +1,5 @@
-import { MdPeopleAlt as PeopleIcon, MdCalendarMonth as CalendarIcon, MdEditDocument as DocumentIcon, MdAttachMoney as MoneyIcon, MdSettings as SettingsIcon } from 'react-icons/md'
-import { NavigationLinkProps } from '~/components/common/navigation/NavigationLink'
+import { MdCalendarMonth as CalendarIcon, MdEditDocument as DocumentIcon, MdAttachMoney as MoneyIcon, MdPeopleAlt as PeopleIcon, MdSettings as SettingsIcon } from "react-icons/md"
+import { type NavigationLinkProps } from "~/components/common/navigation/NavigationLink"
 
 export const ADMIN_ASIDE_NAVIGATION: NavigationLinkProps[] = [
     {

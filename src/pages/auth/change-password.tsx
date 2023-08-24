@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as jwt from 'jsonwebtoken'
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import * as jwt from "jsonwebtoken"
+import { type GetServerSideProps, type InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -18,7 +18,7 @@ export const changePasswordSchema = z.object({
     repeatedPassword: z.string().nonempty({ message: ErrorMessages.FIELD_REQUIRED }),
 })
 
-const refinedChangePasswordSchema = changePasswordSchema.refine(({ password, repeatedPassword }) => password === repeatedPassword, { message: ErrorMessages.PASSWORDS_MISMATCH, path: ['password'] })
+const refinedChangePasswordSchema = changePasswordSchema.refine(({ password, repeatedPassword }) => password === repeatedPassword, { message: ErrorMessages.PASSWORDS_MISMATCH, path: ["password"] })
 
 type ChangePasswordSchema = z.infer<typeof refinedChangePasswordSchema>
 
@@ -35,7 +35,7 @@ export default function ChangePassword({ userId }: InferGetServerSidePropsType<t
         },
 
         onError: () => {
-            toast('Ha habido un error', { type: 'error' })
+            toast("Ha habido un error", { type: "error" })
         }
     })
 

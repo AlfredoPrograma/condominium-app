@@ -1,5 +1,5 @@
-import { MdOutlineKeyboardArrowDown as ChevronDownIcon } from 'react-icons/md'
-import { NavigationLink, NavigationLinkProps } from '~/components/common/navigation/NavigationLink'
+import { MdOutlineKeyboardArrowDown as ChevronDownIcon } from "react-icons/md"
+import { NavigationLink, type NavigationLinkProps } from "~/components/common/navigation/NavigationLink"
 
 interface AsideNavigationProps {
     links: NavigationLinkProps[]

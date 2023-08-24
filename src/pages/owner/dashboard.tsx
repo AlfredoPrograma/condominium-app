@@ -1,9 +1,9 @@
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { type GetServerSideProps, type InferGetServerSidePropsType } from "next";
 import { DashboardLayout } from "~/components/common/layouts";
 
-import { WithUser, verifySession } from "~/utils/auth/session";
+import { type WithUser, verifySession } from "~/utils/auth/session";
 
-interface OwnerDashboardProps extends WithUser { }
+type OwnerDashboardProps = WithUser
 
 export default function OwnerDashboard({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
     return (

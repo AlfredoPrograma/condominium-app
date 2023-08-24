@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+import { type Role } from "@prisma/client";
 
 export const routes = {
     auth: {
@@ -6,10 +6,10 @@ export const routes = {
         signUp: "/auth/sign-up"
     },
     owner: {
-        dashboard: '/owner/dashboard'
+        dashboard: "/owner/dashboard"
     },
     admin: {
-        dashboard: '/admin/dashboard'
+        dashboard: "/admin/dashboard"
     }
 }
 

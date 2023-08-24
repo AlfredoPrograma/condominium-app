@@ -1,12 +1,12 @@
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { type GetServerSideProps, type InferGetServerSidePropsType } from "next";
 import { DashboardLayout } from "~/components/common/layouts";
-import { WithUser, verifySession } from "~/utils/auth/session";
+import { type WithUser, verifySession } from "~/utils/auth/session";
 import { ADMIN_QUICK_ACTIONS } from "~/constants/dashboards/quickActions";
 import { QuickAction } from "~/components/common/navigation/QuickAction";
 import { api } from "~/utils/api";
 import { OwnersTable } from "~/components/admin/tables/OwnersTable";
 
-interface AdminLayoutProps extends WithUser { }
+type AdminLayoutProps = WithUser
 
 export default function AdminLayout({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
     const { data } = api.owners.getAll.useQuery()

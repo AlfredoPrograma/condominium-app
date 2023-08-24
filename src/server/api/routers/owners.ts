@@ -1,18 +1,18 @@
-import * as trpc from '@trpc/server'
-import * as jwt from 'jsonwebtoken'
-import { z } from 'zod'
-import { registerOwnerSchema } from '~/components/admin/forms/RegisterOwnerForm'
-import { env } from '~/env.mjs'
-import { changePasswordSchema } from '~/pages/auth/change-password'
+import * as trpc from "@trpc/server"
+import * as jwt from "jsonwebtoken"
+import { z } from "zod"
+import { registerOwnerSchema } from "~/components/admin/forms/RegisterOwnerForm"
+import { env } from "~/env.mjs"
+import { changePasswordSchema } from "~/pages/auth/change-password"
 import {
     createTRPCRouter,
     protectedProcedure,
     publicProcedure
-} from '~/server/api/trpc'
-import { sendMail } from '~/services/mailing'
-import { hashPassword } from '~/utils/encrypt/hashPassword'
-import { AppRouter } from '../root'
-import { RouterOutputs } from '~/utils/api'
+} from "~/server/api/trpc"
+import { sendMail } from "~/services/mailing"
+import { hashPassword } from "~/utils/encrypt/hashPassword"
+import { AppRouter } from "../root"
+import { RouterOutputs } from "~/utils/api"
 
 const withUserIdSchema = z.object({
     userId: z.string().nonempty()
@@ -23,7 +23,7 @@ export const ownersRouter = createTRPCRouter({
         .query(async ({ ctx }) => {
             const owners = await ctx.prisma.user.findMany({ 
             where: {
-                role: 'OWNER',
+                role: "OWNER",
                 isActive: true
             }, 
             select: {
@@ -87,7 +87,7 @@ export const ownersRouter = createTRPCRouter({
             const token = await jwt.sign({ userId: newOwner.userId }, env.NEXTAUTH_SECRET!)
 
             await sendMail({
-                subject: 'Culmina tu registro',
+                subject: "Culmina tu registro",
                 to: newOwner.email,
                 text: `http://localhost:3000/auth/change-password?token=${token}`
             })

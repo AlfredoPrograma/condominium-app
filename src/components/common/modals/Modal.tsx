@@ -1,6 +1,6 @@
-import { ChangeEvent, Dispatch, SetStateAction, useEffect } from 'react'
-import { MdClose as CloseIcon } from 'react-icons/md'
-import { twMerge } from 'tailwind-merge'
+import { type ChangeEvent, type Dispatch, type SetStateAction, useEffect } from "react"
+import { MdClose as CloseIcon } from "react-icons/md"
+import { twMerge } from "tailwind-merge"
 
 export interface ModalProps {
     id: string,
@@ -26,7 +26,7 @@ export function Modal({ id, title, isOpen, width, setIsOpen, onClose, onOpen, ch
         <>
             <input onChange={handleClose} type="checkbox" id={id} className="modal-toggle" checked={isOpen} />
             <div className="modal">
-                <div className={twMerge('modal-box', width)}>
+                <div className={twMerge("modal-box", width)}>
                     <header className='flex justify-between items-center'>
                         <h3 className="font-bold text-lg">{title}</h3>
 
