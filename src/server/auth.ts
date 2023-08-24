@@ -5,9 +5,9 @@ import {
 import CredentialsProvider from "next-auth/providers/credentials";
 import { type GetServerSidePropsContext } from "next";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { isValidPassword } from "~/utils/encrypt/hashPassword";
 import { prisma } from "~/server/db";
 import { signInSchema } from "~/pages/auth/sign-in";
-import { validatePassword } from "~/utils/encrypt/hashPassword";
 
 type UserRole = "OWNER" | "ADMIN"
 
@@ -67,7 +67,7 @@ export const authOptions: NextAuthOptions = {
           where: { email }
         })
 
-        if (!user?.password || await validatePassword(password, user.password)) {
+        if (!user?.password || !user.isActive || !(await isValidPassword(password, user.password))) {
           return null
         }
 
