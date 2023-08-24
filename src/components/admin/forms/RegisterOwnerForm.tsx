@@ -1,13 +1,13 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { toast } from "react-toastify"
-import { z } from "zod"
-import { TextField } from "~/components/common/forms/TextField"
 import { Modal, type ModalProps } from "~/components/common/modals/Modal"
-import { api } from "~/utils/api"
 import { ErrorMessages } from "~/utils/errors/errorMessages"
 import { type Owner } from "../tables/OwnersTable"
+import { TextField } from "~/components/common/forms/TextField"
+import { api } from "~/utils/api"
+import { toast } from "react-toastify"
+import { useState } from "react"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export const registerOwnerSchema = z.object({
     firstName: z.string().nonempty({ message: ErrorMessages.FIELD_REQUIRED }),
@@ -37,8 +37,8 @@ export function RegisterOwnerForm({ id, title, owner, onClose }: RegisterOwnerFo
     })
 
     const { mutate: mutateRegisterOwner, isLoading } = api.owners.create.useMutation({
-        onSuccess: () => {
-            trpcUtils.invalidate(undefined, { queryKey: ["owners.getAll"] })
+        onSuccess: async () => {
+            await trpcUtils.invalidate(undefined, { queryKey: ["owners.getAll"] })
             toast("Propietario creado exitosamente", { type: "success" })
             setIsOpen(false)
         },

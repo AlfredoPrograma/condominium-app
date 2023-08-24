@@ -1,16 +1,14 @@
+import { MdNotificationsNone as NotificationsIcon, MdOutlineSearch as SearchIcon, } from "react-icons/md"
+import { routes } from "~/constants/routes"
 import { signOut } from "next-auth/react"
 import { useRouter } from "next/router"
-
-import { MdNotificationsNone as NotificationsIcon, MdOutlineSearch as SearchIcon, } from "react-icons/md"
-
-import { routes } from "~/constants/routes"
 
 export function Navbar() {
     const router = useRouter()
 
     const handleSignOut = async () => {
         await signOut({ redirect: false })
-        router.replace(routes.auth.signIn)
+        await router.replace(routes.auth.signIn)
     }
 
     return (

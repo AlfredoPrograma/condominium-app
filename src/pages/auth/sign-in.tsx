@@ -1,20 +1,18 @@
+import { type ErrorCodes, errors } from "~/constants/errors"
+import { FormProvider, useForm } from "react-hook-form"
+import { getSession, signIn, useSession } from "next-auth/react"
+import { ErrorMessages } from "~/utils/errors/errorMessages"
 import { type GetServerSideProps } from "next"
-import { useRouter } from "next/router"
 import Image from "next/image"
 import Link from "next/link"
-import { getSession, signIn, useSession } from "next-auth/react"
-
-import { FormProvider, useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { toast } from "react-toastify"
-
-import { TextField } from "~/components/common/forms/TextField"
 import { PageContainer } from "~/components/common/layouts/PageContainer"
+import { TextField } from "~/components/common/forms/TextField"
 import { getDashboardRouteByRole } from "~/constants/routes"
-import { type ErrorCodes, errors } from "~/constants/errors"
+import { toast } from "react-toastify"
 import { useEffect } from "react"
+import { useRouter } from "next/router"
 import { z } from "zod"
-import { ErrorMessages } from "~/utils/errors/errorMessages"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export const signInSchema = z.object({
     email: z.string().email({ message: ErrorMessages.INVALID_EMAIL }),
@@ -57,12 +55,16 @@ export default function SignIn() {
     }
 
     useEffect(() => {
-        if (session.status === "authenticated" && session.data) {
-            const destination = getDashboardRouteByRole(session.data.user.role)
+        const handleRedirect = async () => {
+            if (session.status === "authenticated" && session.data) {
+                const destination = getDashboardRouteByRole(session.data.user.role)
 
-            router.replace(destination)
+                await router.replace(destination)
+            }
         }
-    }, [session])
+
+        void handleRedirect()
+    }, [session, router])
 
     return (
         <PageContainer title="Inicia sesión">

@@ -1,8 +1,7 @@
 import { MdGroupAdd as AddOwnerIcon, MdCalendarMonth as CalendarIcon, MdAttachMoney as MoneyIcon } from "react-icons/md"
-import { RegisterOwnerForm } from "~/components/admin/forms/RegisterOwnerForm";
 import { Modal } from "~/components/common/modals/Modal";
-
 import { type QuickActionProps } from "~/components/common/navigation/QuickAction";
+import { RegisterOwnerForm } from "~/components/admin/forms/RegisterOwnerForm";
 
 export const ADMIN_QUICK_ACTIONS: QuickActionProps[] = [
     {

@@ -4,5 +4,4 @@ export const ErrorMessages = {
     WEAK_PASSWORD: "La contraseña debe tener al menos 4 caracteres",
     NOT_ADULT: "El propietario debe ser mayor de edad",
     PASSWORDS_MISMATCH: "Las contraseñas no son iguales"
-
 }

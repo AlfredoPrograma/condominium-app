@@ -1,13 +1,12 @@
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { type GetServerSidePropsContext } from "next";
 import {
-  type DefaultSession,
   type NextAuthOptions,
   getServerSession,
 } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { signInSchema } from "~/pages/auth/sign-in";
+import { type GetServerSidePropsContext } from "next";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "~/server/db";
+import { signInSchema } from "~/pages/auth/sign-in";
 import { validatePassword } from "~/utils/encrypt/hashPassword";
 
 type UserRole = "OWNER" | "ADMIN"
@@ -82,6 +81,7 @@ export const authOptions: NextAuthOptions = {
   ],
 
   callbacks: {
+    // eslint-disable-next-line @typescript-eslint/require-await
     async jwt({ token, user }) {
       if (user?.role) {
         token.role = user.role
@@ -90,6 +90,7 @@ export const authOptions: NextAuthOptions = {
       return token
     },
 
+    // eslint-disable-next-line @typescript-eslint/require-await
     async session({ session, token }) {
       if (token?.role) {
         session.user.role = token.role

@@ -1,10 +1,10 @@
-import { createColumnHelper, getCoreRowModel, useReactTable } from "@tanstack/react-table"
-import { useState } from "react";
 import { MdDelete as DeleteIcon, MdEdit as EditIcon } from "react-icons/md"
-import { toast } from "react-toastify";
-import { Table } from "~/components/common/tables/Table";
 import { type RouterOutputs, api } from "~/utils/api";
+import { createColumnHelper, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { RegisterOwnerForm } from "../forms/RegisterOwnerForm";
+import { Table } from "~/components/common/tables/Table";
+import { toast } from "react-toastify";
+import { useState } from "react";
 
 interface ActionProps {
     handleEditOwner: () => void
@@ -41,8 +41,8 @@ export function OwnersTable({ owners }: OwnersTableProps) {
 
     console.log(selectedOwner)
     const { mutate: mutateDeleteOwner } = api.owners.delete.useMutation({
-        onSuccess: () => {
-            trpcUtils.invalidate(undefined, { queryKey: ["owners.getAll"] })
+        onSuccess: async () => {
+            await trpcUtils.invalidate(undefined, { queryKey: ["owners.getAll"] })
             toast("Propietario eliminado exitosamente", { type: "success" })
         }
     })

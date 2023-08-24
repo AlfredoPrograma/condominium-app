@@ -1,7 +1,6 @@
 import { type GetServerSideProps, type InferGetServerSidePropsType } from "next";
-import { DashboardLayout } from "~/components/common/layouts";
-
 import { type WithUser, verifySession } from "~/utils/auth/session";
+import { DashboardLayout } from "~/components/common/layouts";
 
 type OwnerDashboardProps = WithUser
 

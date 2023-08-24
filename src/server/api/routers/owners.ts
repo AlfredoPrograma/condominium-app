@@ -1,18 +1,16 @@
-import * as trpc from "@trpc/server"
 import * as jwt from "jsonwebtoken"
-import { z } from "zod"
-import { registerOwnerSchema } from "~/components/admin/forms/RegisterOwnerForm"
-import { env } from "~/env.mjs"
-import { changePasswordSchema } from "~/pages/auth/change-password"
+import * as trpc from "@trpc/server"
 import {
     createTRPCRouter,
     protectedProcedure,
     publicProcedure
 } from "~/server/api/trpc"
-import { sendMail } from "~/services/mailing"
+import { changePasswordSchema } from "~/pages/auth/change-password"
+import { env } from "~/env.mjs"
 import { hashPassword } from "~/utils/encrypt/hashPassword"
-import { AppRouter } from "../root"
-import { RouterOutputs } from "~/utils/api"
+import { registerOwnerSchema } from "~/components/admin/forms/RegisterOwnerForm"
+import { sendMail } from "~/services/mailing"
+import { z } from "zod"
 
 const withUserIdSchema = z.object({
     userId: z.string().nonempty()
@@ -84,7 +82,7 @@ export const ownersRouter = createTRPCRouter({
                 }
             })
 
-            const token = await jwt.sign({ userId: newOwner.userId }, env.NEXTAUTH_SECRET!)
+            const token = jwt.sign({ userId: newOwner.userId }, env.NEXTAUTH_SECRET!)
 
             await sendMail({
                 subject: "Culmina tu registro",

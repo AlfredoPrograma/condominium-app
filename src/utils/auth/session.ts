@@ -1,7 +1,7 @@
 import {  type GetServerSidePropsContext, type GetServerSidePropsResult } from "next";
+import { getDashboardRouteByRole, routes } from "~/constants/routes";
 import { type Session } from "next-auth";
 import { getSession } from "next-auth/react";
-import { getDashboardRouteByRole, routes } from "~/constants/routes";
 
 export interface WithUser {
     user: Session["user"]

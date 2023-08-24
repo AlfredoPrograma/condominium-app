@@ -1,17 +1,17 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import * as jwt from "jsonwebtoken"
-import { type GetServerSideProps, type InferGetServerSidePropsType } from "next";
-import { useRouter } from "next/router";
 import { FormProvider, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import { z } from "zod";
-import { TextField } from "~/components/common/forms/TextField";
+import { type GetServerSideProps, type InferGetServerSidePropsType } from "next";
+import { ErrorMessages } from "~/utils/errors/errorMessages";
 import { PageContainer } from "~/components/common/layouts";
-import { routes } from "~/constants/routes";
+import { TextField } from "~/components/common/forms/TextField";
+import { api } from "~/utils/api";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
-import { api } from "~/utils/api";
-import { ErrorMessages } from "~/utils/errors/errorMessages";
+import { routes } from "~/constants/routes";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export const changePasswordSchema = z.object({
     password: z.string().nonempty({ message: ErrorMessages.FIELD_REQUIRED }),
@@ -30,8 +30,8 @@ export default function ChangePassword({ userId }: InferGetServerSidePropsType<t
     const router = useRouter()
 
     const { mutate: mutateConcretePassword } = api.owners.concretePassword.useMutation({
-        onSuccess: () => {
-            router.replace(routes.auth.signIn)
+        onSuccess: async () => {
+            await router.replace(routes.auth.signIn)
         },
 
         onError: () => {

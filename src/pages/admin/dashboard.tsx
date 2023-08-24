@@ -1,10 +1,10 @@
 import { type GetServerSideProps, type InferGetServerSidePropsType } from "next";
-import { DashboardLayout } from "~/components/common/layouts";
 import { type WithUser, verifySession } from "~/utils/auth/session";
 import { ADMIN_QUICK_ACTIONS } from "~/constants/dashboards/quickActions";
+import { DashboardLayout } from "~/components/common/layouts";
+import { OwnersTable } from "~/components/admin/tables/OwnersTable";
 import { QuickAction } from "~/components/common/navigation/QuickAction";
 import { api } from "~/utils/api";
-import { OwnersTable } from "~/components/admin/tables/OwnersTable";
 
 type AdminLayoutProps = WithUser
 
