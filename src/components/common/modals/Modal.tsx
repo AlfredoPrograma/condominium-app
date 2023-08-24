@@ -20,7 +20,7 @@ export function Modal({ id, title, isOpen, width, setIsOpen, onClose, onOpen, ch
 
     useEffect(() => {
         isOpen ? onOpen?.() : onClose?.()
-    }, [isOpen, onOpen, onClose])
+    }, [isOpen])
 
     return (
         <>
