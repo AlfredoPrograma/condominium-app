@@ -24,8 +24,8 @@ model User {
     firstName      String
     lastName       String
     age            Int
-    identifierCode String
-    phoneNumber    String
+    identifierCode String     @unique
+    phoneNumber    String     @unique
     email          String     @unique
     password       String?
     role           Role       @default(OWNER)
@@ -37,7 +37,7 @@ model User {
 
 model Property {
     propertyId String  @id @default(uuid())
-    code       String
+    code       String  @unique
     User       User?   @relation(fields: [userId], references: [userId])
     userId     String?
 }
