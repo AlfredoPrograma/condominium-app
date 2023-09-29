@@ -12,7 +12,7 @@ services:
     volumes:
       - "./.docker/data:/var/lib/postgresql/data"
     ports:
-      - "15432:5432"
+      - "${POSTGRES_PORT}:5432"
 
   
   
