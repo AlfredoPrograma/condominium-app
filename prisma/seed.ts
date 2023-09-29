@@ -2,10 +2,15 @@ import { hashPassword } from "../src/utils/encrypt/hashPassword";
 import { prisma } from "../src/server/db";
 
 async function seed() {
-    const password = await hashPassword("ADMIN")
+    const [email, plainPassword] = process.argv.slice(2)
+
+    if (!email || !plainPassword) {
+        throw new Error("Email and password are required as arguments")
+    }
+
+    const password = await hashPassword(plainPassword)
     await prisma.user.create({
         data: {
-            email: "admin@admin.com",
             age: 99,
             firstName: "Admin",
             lastName: "Admin",
@@ -14,6 +19,7 @@ async function seed() {
             emailVerified: new Date(),
             role: "ADMIN",
             isActive: true,
+            email,
             password
         }
     })
