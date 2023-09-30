@@ -64,31 +64,47 @@ export const ownersRouter = createTRPCRouter({
                 })
             }
 
-            const newOwner = await ctx.prisma.user.create({
-                data: {
-                    firstName,
-                    lastName,
-                    age: Number(age),
-                    identifierCode,
-                    phoneNumber,
-                    email, 
-                    properties: {
-                        create: [
-                            {
-                                code: propertyCode
+            const registerAndNotify = async () => {
+                return await ctx.prisma.$transaction(async (tx) => {
+                    try {
+                        const newOwner = await tx.user.create({
+                            data: {
+                                firstName,
+                                lastName,
+                                age: Number(age),
+                                identifierCode,
+                                phoneNumber,
+                                email, 
+                                properties: {
+                                    create: [
+                                        {
+                                            code: propertyCode
+                                        }
+                                    ]
+                                }
                             }
-                        ]
+                        })
+            
+                        const token = jwt.sign({ userId: newOwner.userId }, env.NEXTAUTH_SECRET!)
+            
+                        await sendMail({
+                            subject: "Culmina tu registro",
+                            to: newOwner.email,
+                            // TODO: Change this to the actual url and send a template
+                            text: `http://localhost:8080/auth/change-password?token=${token}`
+                        })
+                    } catch(err) {
+                        await tx.user.delete({ where: { email } })
+
+                        throw new trpc.TRPCError({
+                            code: "INTERNAL_SERVER_ERROR",
+                            message: "An error ocurred while creating the owner"
+                        })
                     }
-                }
-            })
+                })
+            }
 
-            const token = jwt.sign({ userId: newOwner.userId }, env.NEXTAUTH_SECRET!)
-
-            await sendMail({
-                subject: "Culmina tu registro",
-                to: newOwner.email,
-                text: `http://localhost:3000/auth/change-password?token=${token}`
-            })
+            await registerAndNotify()
 
             return {
                 status: 201,
