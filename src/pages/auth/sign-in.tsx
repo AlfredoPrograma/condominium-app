@@ -69,7 +69,6 @@ export default function SignIn() {
     return (
         <PageContainer title="Inicia sesión">
             <section className="min-h-screen grid lg:grid-cols-[1fr_2fr]">
-
                 <section className="grid place-items-center">
                     <div className="flex flex-col items-center gap-6">
                         <header className="flex flex-col gap-1 text-center">

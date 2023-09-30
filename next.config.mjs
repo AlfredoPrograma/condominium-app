@@ -17,6 +17,16 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  // eslint-disable-next-line @typescript-eslint/require-await
+  redirects: async () => {
+    return [
+      {
+        source: "/",
+        destination: "/auth/sign-in",
+        permanent: true,
+      }
+    ]
+  }
 };
 
 export default config;
